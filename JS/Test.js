@@ -5,7 +5,7 @@ const { expressjwt: expressJwt } = require('express-jwt');
 const app = express();
 app.use(express.json());
 
-const JWT_SECRET = 'your_secret_key';
+const JWT_SECRET = 'bezKoderSecretKey';
 
 // Middleware to simulate user roles from JWT
 const jwtCheck = expressJwt({

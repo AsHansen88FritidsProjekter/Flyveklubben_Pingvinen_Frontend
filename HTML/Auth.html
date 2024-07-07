@@ -3,58 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Form</title>
+    <title>Simple Authentication Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: 0 auto; padding-top: 50px; }
+        label { display: block; margin-top: 10px; }
+        input, button { width: 100%; margin-top: 5px; }
+    </style>
 </head>
 <body>
-<h2>Signup Form</h2>
-<form id="signupForm">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" required><br>
+<div class="container">
+    <h2>Login</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+    <button onclick="login()">Login</button>
 
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required><br>
+    <h2>Signup</h2>
+    <label for="newUsername">Username:</label>
+    <input type="text" id="newUsername" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+    <label for="newPassword">Password:</label>
+    <input type="password" id="newPassword" required>
+    <label for="role">Roles (comma-separated):</label>
+    <input type="text" id="role" required>
+    <button onclick="signup()">Sign Up</button>
 
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br>
-
-    <label for="role">Role:</label><br>
-    <select id="role" name="role" multiple>
-        <option value="ROLE_USER">User</option>
-        <option value="ROLE_ADMIN">Admin</option>
-        <option value="ROLE_MODERATOR">Moderator</option>
-    </select><br><br>
-
-    <button type="button" onclick="submitForm()">Signup</button>
-</form>
-
-<script>
-    function submitForm() {
-        const form = document.getElementById('signupForm');
-        const formData = new FormData(form);
-        const data = {
-            username: formData.get('username'),
-            email: formData.get('email'),
-            password: formData.get('password'),
-            role: Array.from(formData.getAll('role'))
-        };
-
-        fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert('Success: ' + data.message);
-                form.reset(); // Reset all form data
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
-</script>
-
+    <h2>Sign Out</h2>
+    <button onclick="signout()">Sign Out</button>
+</div>
 </body>
+
+<script src="/JS/Auth.js"></script>
+
 </html>
+
