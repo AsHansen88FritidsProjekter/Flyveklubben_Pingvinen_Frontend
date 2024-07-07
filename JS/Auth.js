@@ -2,7 +2,7 @@ function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    fetch('/api/auth/signin', {
+    fetch('http://localhost:9090/api/auth/signin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -19,13 +19,15 @@ function login() {
         });
 }
 
+
+
 function signup() {
     const username = document.getElementById('newUsername').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('newPassword').value;
     const role = document.getElementById('role').value.split(',');
 
-    fetch('/api/auth/signup', {
+    fetch('http://localhost:9090/api/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -44,7 +46,7 @@ function signup() {
 
 function signout() {
     // Assuming signout does not need body data, only removes the token on server side
-    fetch('/api/auth/signout', {
+    fetch('http://localhost:9090/api/auth/signout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
