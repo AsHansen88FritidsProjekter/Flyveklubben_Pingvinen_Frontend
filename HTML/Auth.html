@@ -3,40 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Authentication Page</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { width: 300px; margin: 0 auto; padding-top: 50px; }
-        label { display: block; margin-top: 10px; }
-        input, button { width: 100%; margin-top: 5px; }
-    </style>
+    <title>Login</title>
 </head>
 <body>
-<div class="container">
+<div>
     <h2>Login</h2>
-    <label for="username">Username:</label>
-    <input type="text" id="username" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" required>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
     <button onclick="login()">Login</button>
+</div>
 
+<div>
     <h2>Signup</h2>
-    <label for="newUsername">Username:</label>
-    <input type="text" id="newUsername" required>
-    <label for="email">Email:</label>
-    <input type="email" id="email" required>
-    <label for="newPassword">Password:</label>
-    <input type="password" id="newPassword" required>
-    <label for="role">Roles (comma-separated):</label>
-    <input type="text" id="role" required>
-    <button onclick="signup()">Sign Up</button>
+    <input type="text" id="newUsername" placeholder="Username">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="newPassword" placeholder="Password">
+    <input type="text" id="role" placeholder="Role (comma separated)">
+    <button onclick="signup()">Signup</button>
+</div>
 
-    <h2>Sign Out</h2>
+<div>
+    <h2>User Info</h2>
+    <p id="userInfo"></p>
     <button onclick="signout()">Sign Out</button>
 </div>
-</body>
 
 <script src="/JS/Auth.js"></script>
-
+</body>
 </html>
+
 
