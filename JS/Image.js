@@ -25,6 +25,9 @@ async function downloadImage(fileName) {
     try {
         const response = await fetch(`http://localhost:9090/image/${fileName}`, {
             method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
         });
 
         if (!response.ok) {

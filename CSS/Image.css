@@ -20,6 +20,7 @@ h1, h2 {
     color: #333;
 }
 input[type="file"],
+
 input[type="text"] {
     display: block;
     margin-top: 10px;
