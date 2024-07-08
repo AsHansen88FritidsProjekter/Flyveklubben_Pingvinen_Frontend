@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/Css/Forside.css">
+    <link rel="stylesheet" href="/CSS/NavBar.css">
+
     <title>Pingvinen</title>
-
 </head>
+<body onload="fetchUserInfo()">
+<header>
+    <ul>
+        <li><a class="active" href="Homepage.html">Forside</a></li>
+        <li><a href="Homepage.html">Nyheder</a></li>
+        <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
+        <li><a class="active" href="Calender.html">Kalender</a></li>
+        <li class="dropdown">
 
-<ul>
-    <li><a class="active" href="Homepage.html">Forside</a></li>
-    <li><a href="Homepage.html">Nyheder</a></li>
+            <a href="#" class="dropbtn">Mere</a>
+            <div class="dropdown-content">
+                <a class="active" href="Auth.html">Login</a>
+            </div>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropbtn">Profile</a>
+            <div class="dropdown-content">
+                <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+                <a href="#" id="signout" onclick="signout()">Sign Out</a>
+            </div>
+        </li>
+    </ul>
+</header>
 
 
-    <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
-    </li>
 
-    <li><a class="active" href="Calender.html">Kalender</a></li>
-    </li>
-
-    <li class="dropdown">
-        <a href="#" class="dropbtn">Mere</a>
-        <div class="dropdown-content">>
-            <a class="active" href="Auth.html">Login</a>
-        </div>
-    </li>
-</ul>
-
-<body>
-
-<h1>Velkommen til Pingvinen</h1>
 
 </body>
+<h1>Velkommen til Pingvinen</h1>
+<script src="/JS/Auth.js"></script>
 </html>
