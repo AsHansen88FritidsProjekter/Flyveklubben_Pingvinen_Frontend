@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Menu</title>
+    <link rel="stylesheet" href="/CSS/Logo.css">
+</head>
+<body onload="fetchUserInfo()">
+<header>
+
+     <div class="dropdown">
+        <button class="dropbtn">User Menu</button>
+        <div class="dropdown-content">
+            <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+            <a href="#" id="signout" onclick="signout()">Sign Out</a>
+        </div>
+    </div>
+</header>
+
+<script src="/JS/Auth.js"></script>
+</body>
+</html>
