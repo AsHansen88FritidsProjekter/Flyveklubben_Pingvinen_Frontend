@@ -1,5 +1,6 @@
 function submitForm() {
-    const form = document.getElementById('contactForm'); // Make sure your form has an ID of 'contactForm'
+    // Corrected to match the intended form ID 'contactForm'
+    const form = document.getElementById('contactForm');
     const contactData = {
         firstname: form.elements['firstname'].value,
         lastname: form.elements['lastname'].value,
@@ -22,7 +23,7 @@ function submitForm() {
             if (!response.ok) {
                 throw new Error('Network response was not ok: ' + response.statusText);
             }
-            return response.json();
+            return response.json(); // Assuming the server responds with JSON
         })
         .then(data => {
             console.log('Success:', data);
