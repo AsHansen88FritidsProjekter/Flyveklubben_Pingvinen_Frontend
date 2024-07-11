@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News API Client</title>
+</head>
+<body>
+<h1>News API Client</h1>
+
+<h2>All News</h2>
+<button onclick="fetchAllNews()">Fetch All News</button>
+<div id="all-news"></div>
+
+<h2>Get News by ID</h2>
+<input type="number" id="news-id" placeholder="Enter News ID">
+<button onclick="fetchNewsById()">Fetch News by ID</button>
+<div id="news-by-id"></div>
+
+<h2>Create News</h2>
+<input type="text" id="news-title" placeholder="Enter News Title">
+<input type="text" id="news-content" placeholder="Enter News Content">
+<button onclick="createNews()">Create News</button>
+<div id="create-response"></div>
+
+<h2>Delete News by ID</h2>
+<input type="number" id="delete-news-id" placeholder="Enter News ID">
+<button onclick="deleteNewsById()">Delete News</button>
+<div id="delete-response"></div>
+
+
+
+</body>
+
+
+<script src="/JS/News.js"></script>
+
+</html>
