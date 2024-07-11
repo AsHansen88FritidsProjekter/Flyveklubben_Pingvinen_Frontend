@@ -11,8 +11,9 @@ function fetchAllNews() {
             data.forEach(news => {
                 const newsItemDiv = document.createElement('div');
                 newsItemDiv.className = 'news-item';
+                const newsDate = new Date(news.createdAt).toLocaleString(); // Format the date
                 newsItemDiv.innerHTML = `
-                            <span>${news.title}: ${news.content}</span>
+                            <span>${news.title}: ${news.content} (Date: ${newsDate})</span>
                             <span class="delete-button" onclick="deleteNewsById(${news.id})">x</span>
                         `;
                 newsDiv.appendChild(newsItemDiv);
