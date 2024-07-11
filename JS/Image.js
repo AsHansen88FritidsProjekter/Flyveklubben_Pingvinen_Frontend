@@ -3,8 +3,11 @@ async function uploadImage(file) {
     formData.append("image", file);
 
     try {
-        const response = await fetch('http://localhost:9090/image', {
+        const response = await fetch('http://localhost:9090/api/image', {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
             body: formData,
         });
 
@@ -23,7 +26,8 @@ async function uploadImage(file) {
 
 async function downloadImage(fileName) {
     try {
-        const response = await fetch(`http://localhost:9090/image/${fileName}`, {
+        const encodedFileName = encodeURIComponent(fileName);
+        const response = await fetch(`http://localhost:9090/api/image/${encodedFileName}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -35,24 +39,28 @@ async function downloadImage(fileName) {
         }
 
         const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob);
-
-        const imgElement = document.createElement('img');
-        imgElement.src = imageUrl;
-        document.getElementById('imageContainer').innerHTML = '';
-        document.getElementById('imageContainer').appendChild(imgElement);
-
-        console.log('Image downloaded successfully');
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('imageContainer').innerHTML = `Error: ${error.message}`;
+        document.getElementById('uploadResult').textContent = `Error: ${error.message}`;
     }
 }
 
 async function fetchUploadedImages() {
     try {
-        const response = await fetch('http://localhost:9090/image/images', {
+        const response = await fetch('http://localhost:9090/api/image/images', {
             method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
         });
 
         if (!response.ok) {
@@ -64,17 +72,73 @@ async function fetchUploadedImages() {
         container.innerHTML = '';
 
         imageFiles.forEach(file => {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.display = 'inline-block';
+
             const imgElement = document.createElement('img');
-            imgElement.src = `http://localhost:9090/image/${file}`;
+            imgElement.src = `http://localhost:9090/api/image/${encodeURIComponent(file)}`;
             imgElement.alt = file;
-            imgElement.style.width = '100px';
-            imgElement.style.margin = '10px';
-            container.appendChild(imgElement);
+            imgElement.classList.add('gallery-image');
+            imgContainer.appendChild(imgElement);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.addEventListener('click', () => deleteImage(file));
+            imgContainer.appendChild(deleteBtn);
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.innerHTML = '⬇'; // Unicode character for down arrow
+            downloadBtn.classList.add('download-btn');
+            downloadBtn.addEventListener('click', () => downloadImage(file));
+            imgContainer.appendChild(downloadBtn);
+
+            container.appendChild(imgContainer);
+
+            // Add click event to open lightbox
+            imgElement.addEventListener('click', () => {
+                openLightbox(imgElement.src);
+            });
         });
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('uploadedImagesContainer').innerHTML = `Error: ${error.message}`;
     }
+}
+
+async function deleteImage(fileName) {
+    try {
+        const encodedFileName = encodeURIComponent(fileName);
+        const response = await fetch(`http://localhost:9090/api/image/${encodedFileName}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Image delete failed');
+        }
+
+        document.getElementById('uploadResult').textContent = `Image deleted successfully: ${fileName}`;
+        fetchUploadedImages(); // Refresh the list of uploaded images
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('uploadResult').textContent = `Error: ${error.message}`;
+    }
+}
+
+function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    lightbox.style.display = 'flex';
+    lightboxImage.src = imageSrc;
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.style.display = 'none';
 }
 
 document.getElementById('uploadButton').addEventListener('click', () => {
@@ -87,14 +151,6 @@ document.getElementById('uploadButton').addEventListener('click', () => {
     }
 });
 
-document.getElementById('downloadButton').addEventListener('click', () => {
-    const fileName = document.getElementById('fileNameInput').value;
-    if (fileName) {
-        downloadImage(fileName);
-    } else {
-        alert('Please enter a file name to download.');
-    }
-});
+document.querySelector('.close').addEventListener('click', closeLightbox);
 
-// Fetch the uploaded images when the page loads
 window.onload = fetchUploadedImages;

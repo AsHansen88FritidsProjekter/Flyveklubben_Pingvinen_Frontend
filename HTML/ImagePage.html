@@ -31,20 +31,19 @@
 </ul>
 
 <body>
-<h1>Image Upload and Download</h1>
 
-<h2>Upload Image</h2>
-<input type="file" id="fileInput" accept="image/*">
+<input type="file" id="fileInput">
 <button id="uploadButton">Upload Image</button>
-<p id="uploadResult"></p>
+<div id="uploadResult"></div>
 
-<h2>Download Image</h2>
-<input type="text" id="fileNameInput" placeholder="Enter file name">
-<button id="downloadButton">Download Image</button>
 <div id="imageContainer"></div>
+<div id="uploadedImagesContainer" class="gallery"></div>
 
-<h2>Uploaded Images</h2>
-<div id="uploadedImagesContainer"></div>
+<div class="lightbox" id="lightbox">
+    <span class="close">&times;</span>
+    <img class="lightbox-image" id="lightboxImage">
+
+</div>
 
 <script src="/JS/Image.js"></script>
 </body>
