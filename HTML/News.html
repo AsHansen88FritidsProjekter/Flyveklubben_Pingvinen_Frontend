@@ -2,12 +2,36 @@
 <html lang="en">
 
 <link rel="stylesheet" href="/CSS/News.css">
+<link rel="stylesheet" href="/CSS/NavBar.css">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News API Client</title>
 </head>
+
+<ul>
+    <li><a class="active" href="Homepage.html">Forside</a></li>
+    <li><a href="News.html">Nyheder</a></li>
+    <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
+    <li><a class="active" href="Calender.html">Kalender</a></li>
+
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Mere</a>
+        <div class="dropdown-content">
+            <a class="active" href="Auth.html">Login</a>
+        </div>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Profile</a>
+        <div class="dropdown-content">
+            <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+            <a href="#" id="signout" onclick="signout()">Sign Out</a>
+        </div>
+    </li>
+</ul>
+
 <body>
 <h1>News API Client</h1>
 

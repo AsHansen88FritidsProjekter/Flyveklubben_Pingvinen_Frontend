@@ -1,7 +1,7 @@
 <html lang="en">
 
 <link rel="Stylesheet" href="/CSS/Calender.css">
-<link rel="stylesheet" href="/CSS/Forside.css">
+<link rel="stylesheet" href="/CSS/NavBar.css">
 
 <head>
     <meta charset="UTF-8" />
@@ -15,19 +15,22 @@
 
 <ul>
     <li><a class="active" href="Homepage.html">Forside</a></li>
-    <li><a href="Homepage.html">Nyheder</a></li>
-
-
+    <li><a href="News.html">Nyheder</a></li>
     <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
-    </li>
-
     <li><a class="active" href="Calender.html">Kalender</a></li>
-    </li>
 
     <li class="dropdown">
         <a href="#" class="dropbtn">Mere</a>
-        <div class="dropdown-content">>
+        <div class="dropdown-content">
             <a class="active" href="Auth.html">Login</a>
+        </div>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Profile</a>
+        <div class="dropdown-content">
+            <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+            <a href="#" id="signout" onclick="signout()">Sign Out</a>
         </div>
     </li>
 </ul>

@@ -5,7 +5,31 @@
     <title>Contact List</title>
 
     <link rel="Stylesheet" href="/CSS/ContactList.css">
+    <link rel="stylesheet" href="/CSS/NavBar.css">
 </head>
+
+<ul>
+    <li><a class="active" href="Homepage.html">Forside</a></li>
+    <li><a href="News.html">Nyheder</a></li>
+    <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
+    <li><a class="active" href="Calender.html">Kalender</a></li>
+
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Mere</a>
+        <div class="dropdown-content">
+            <a class="active" href="Auth.html">Login</a>
+        </div>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Profile</a>
+        <div class="dropdown-content">
+            <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+            <a href="#" id="signout" onclick="signout()">Sign Out</a>
+        </div>
+    </li>
+</ul>
+
 <body>
 <h1>Contact List</h1>
 <div id="contacts"></div>

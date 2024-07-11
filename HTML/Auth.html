@@ -11,18 +11,23 @@
 
 <ul>
     <li><a class="active" href="Homepage.html">Forside</a></li>
-    <li><a href="Homepage.html">Nyheder</a></li>
-
-
-        <li><a class="active" href="Calender.html">Kalender</a></li>
-    </li>
+    <li><a href="News.html">Nyheder</a></li>
+    <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
+    <li><a class="active" href="Calender.html">Kalender</a></li>
 
     <li class="dropdown">
         <a href="#" class="dropbtn">Mere</a>
         <div class="dropdown-content">
             <a class="active" href="Auth.html">Login</a>
         </div>
+    </li>
 
+    <li class="dropdown">
+        <a href="#" class="dropbtn">Profile</a>
+        <div class="dropdown-content">
+            <span id="userInfo">Current User: <span id="usernameDisplay">Loading...</span></span>
+            <a href="#" id="signout" onclick="signout()">Sign Out</a>
+        </div>
     </li>
 </ul>
 
@@ -41,12 +46,6 @@
     <input type="password" id="newPassword" placeholder="Password">
     <input type="text" id="role" placeholder="Role (comma separated)">
     <button onclick="signup()">Signup</button>
-</div>
-
-<div>
-    <h2>User Info</h2>
-    <p id="userInfo"></p>
-    <button onclick="signout()">Sign Out</button>
 </div>
 
 <script src="/JS/Auth.js"></script>
