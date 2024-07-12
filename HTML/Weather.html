@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Contact List</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
 
-    <link rel="Stylesheet" href="/CSS/ContactList.css">
-    <link rel="stylesheet" href="/CSS/NavBar.css">
+<link rel="stylesheet" href="/CSS/Weather.css">
+<link rel="stylesheet" href="/CSS/NavBar.css">
+
 </head>
 
 <ul>
@@ -13,7 +15,8 @@
     <li><a href="News.html">Nyheder</a></li>
     <li><a class="active" href="ImagePage.html">Billedgalleri</a></li>
     <li><a class="active" href="Calender.html">Kalender</a></li>
-
+    <li><a class="active" href="ContactForm.html">Kontaktformular</a></li>
+    <li><a class="active" href="Weather.html">Vejret</a></li>
 
     <li class="dropdown">
         <a href="#" class="dropbtn">Mere</a>
@@ -32,9 +35,18 @@
 </ul>
 
 <body>
-<h1>Contact List</h1>
-<div id="contacts"></div>
 
-<script src="/JS/DisplayContacts.js"></script>
+<div class="container">
+<h1>Vejrudsigt</h1>
+<input type="text" id="locationInput" placeholder="Skriv et by navn">
+<button id="searchButton">Søg</button>
+<div class="weather-info">
+
+<h2 id="location"></h2>
+<p id="temperature"></p>
+<p id="description"></p>
+</div>
+</div>
+<script src="/JS/Weather.js"></script>
 </body>
 </html>
