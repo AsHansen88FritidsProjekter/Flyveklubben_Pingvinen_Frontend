@@ -1,0 +1,41 @@
+/* Style for Facebook icon */
+.fa.fa-facebook {
+    position: absolute; /* Position absolutely */
+    top: 10px; /* Distance from the top edge of the screen */
+    right: 20px; /* Distance from the right edge of the screen */
+    background: #3B5998; /* Facebook blue */
+    color: white; /* Icon color */
+    font-size: 20px; /* Icon size */
+    width: 40px; /* Icon width */
+    height: 40px; /* Icon height */
+    border-radius: 50%; /* Make it round */
+    display: inline-flex; /* Ensure it's displayed inline and respects the size */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-decoration: none; /* Remove underline */
+    transition: background 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+}
+
+/* White "f" inside the Facebook icon */
+.fa.fa-facebook::before {
+    content: "f"; /* Content of the pseudo-element */
+    position: absolute; /* Position absolutely */
+    font-size: 30px; /* Size of the "f" */
+    color: white; /* Color of the "f" */
+    top: 50%; /* Position vertically */
+    left: 50%; /* Position horizontally */
+    transform: translate(-50%, -50%); /* Center the "f" */
+}
+
+/* Hover effect */
+.fa.fa-facebook:hover {
+    background: #2E4A88; /* Darker Facebook blue on hover */
+    transform: scale(1.1); /* Scale up slightly on hover */
+}
+
+/* Optional: If you want to hide the text completely */
+.fa.fa-facebook span {
+    display: none;
+}
+
+
