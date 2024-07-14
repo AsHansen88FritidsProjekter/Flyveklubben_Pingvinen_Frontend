@@ -1,4 +1,4 @@
-const apiKey = 'YOUR_API_KEY';
+const apiKey = '0189dc46e2d3b6214c0ed53b8a02ffca';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
 const locationInput = document.getElementById('locationInput');
@@ -28,3 +28,4 @@ function fetchWeather(location) {
             console.error('Error fetching weather data:', error);
         });
 }
+
