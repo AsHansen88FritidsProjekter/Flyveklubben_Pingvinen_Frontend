@@ -17,10 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function generateWeekdaysHeader() {
-        // Already included in static HTML
-    }
-
     function generateCalendarDays() {
         clearCalendar();
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -30,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let dayCount = 1;
         let prevMonthDayCount = daysInPrevMonth - firstDayOfMonth + 2;
         for (let i = 0; i < 6; i++) {
+            const week = document.createElement('div');
+            week.classList.add('week');
+
             for (let j = 0; j < 7; j++) {
                 const day = document.createElement('div');
                 day.classList.add('day');
@@ -47,8 +46,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     dayCount++;
                 }
 
-                calendarBody.appendChild(day);
+                week.appendChild(day);
             }
+
+            calendarBody.appendChild(week);
+        }
+    }
+
+    function generateCalendarWeeks() {
+        clearCalendar();
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
+        for (let i = 0; i < 7; i++) {
+            const day = document.createElement('div');
+            day.classList.add('day');
+            const currentDay = new Date(startOfWeek);
+            currentDay.setDate(startOfWeek.getDate() + i);
+            day.setAttribute('data-date', `${currentDay.getFullYear()}-${(currentDay.getMonth() + 1).toString().padStart(2, '0')}-${currentDay.getDate().toString().padStart(2, '0')}`);
+            day.innerHTML = `<time>${currentDay.getDate()}</time>`;
+            day.addEventListener('click', dateClick);
+            calendarBody.appendChild(day);
         }
     }
 
@@ -121,6 +138,35 @@ document.addEventListener('DOMContentLoaded', function() {
         generateCalendarMonths();
     });
 
+    document.getElementById('prev').addEventListener('click', () => {
+        if (currentView === 'month') {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendarDays();
+        } else if (currentView === 'year') {
+            currentDate.setFullYear(currentDate.getFullYear() - 1);
+            generateCalendarMonths();
+        } else if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() - 7);
+            generateCalendarWeeks();
+        }
+        updateHeader();
+    });
+
+    document.getElementById('next').addEventListener('click', () => {
+        if (currentView === 'month') {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendarDays();
+        } else if (currentView === 'year') {
+            currentDate.setFullYear(currentDate.getFullYear() + 1);
+            generateCalendarMonths();
+        } else if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() + 7);
+            generateCalendarWeeks();
+        }
+        updateHeader();
+    });
+
     updateHeader();
     generateCalendarDays();
 });
+

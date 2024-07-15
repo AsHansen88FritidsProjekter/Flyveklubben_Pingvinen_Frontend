@@ -94,3 +94,8 @@ h1 {
 .calendar-body .day.today time {
     font-weight: 800;
 }
+
+.calendar-body .month-box {
+    height: 6rem;
+}
+
