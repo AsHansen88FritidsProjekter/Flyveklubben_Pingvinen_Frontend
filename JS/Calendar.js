@@ -1,14 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     const apiBaseUrl = 'http://localhost:9090/api/calendar';
     const calendarBody = document.querySelector('.calendar-body');
-    const month = '2024-07'; // The month for which we are displaying the calendar
+    const monthDisplay = document.querySelector('.month');
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    let currentView = 'month';
+    let currentDate = new Date(2024, 6); // July 2024
 
-    // Function to generate the calendar days
+    function updateHeader() {
+        const options = { year: 'numeric', month: 'long' };
+        monthDisplay.textContent = currentDate.toLocaleDateString('en-US', options);
+    }
+
+    function clearCalendar() {
+        while (calendarBody.firstChild) {
+            calendarBody.removeChild(calendarBody.firstChild);
+        }
+    }
+
     function generateCalendarDays() {
-        const firstDayOfMonth = new Date(month + '-01').getDay();
-        const daysInMonth = new Date(2024, 7, 0).getDate();
+        clearCalendar();
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+        const daysInPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
 
         let dayCount = 1;
+        let prevMonthDayCount = daysInPrevMonth - firstDayOfMonth + 2;
         for (let i = 0; i < 6; i++) {
             const week = document.createElement('div');
             week.classList.add('week');
@@ -17,10 +33,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const day = document.createElement('div');
                 day.classList.add('day');
 
-                if (i === 0 && j < firstDayOfMonth || dayCount > daysInMonth) {
-                    day.setAttribute('data-date', '');
+                if (i === 0 && j < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1)) {
+                    day.classList.add('empty');
+                    day.textContent = prevMonthDayCount++;
+                } else if (dayCount > daysInMonth) {
+                    day.classList.add('empty');
+                    day.textContent = dayCount++ - daysInMonth;
                 } else {
-                    day.setAttribute('data-date', month + '-' + (dayCount < 10 ? '0' + dayCount : dayCount));
+                    day.setAttribute('data-date', `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${dayCount.toString().padStart(2, '0')}`);
+                    day.textContent = dayCount;
                     day.addEventListener('click', dateClick);
                     dayCount++;
                 }
@@ -32,10 +53,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to fetch events and display them
+    function generateCalendarWeeks() {
+        clearCalendar();
+        const startOfWeek = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1));
+        for (let i = 0; i < 7; i++) {
+            const day = document.createElement('div');
+            day.classList.add('day');
+            const currentDay = new Date(startOfWeek);
+            currentDay.setDate(startOfWeek.getDate() + i);
+            day.setAttribute('data-date', `${currentDay.getFullYear()}-${(currentDay.getMonth() + 1).toString().padStart(2, '0')}-${currentDay.getDate().toString().padStart(2, '0')}`);
+            day.textContent = currentDay.getDate();
+            day.addEventListener('click', dateClick);
+            calendarBody.appendChild(day);
+        }
+    }
+
+    function generateCalendarYears() {
+        clearCalendar();
+        for (let i = 0; i < 12; i++) {
+            const month = document.createElement('div');
+            month.classList.add('day');
+            const monthDate = new Date(currentDate.getFullYear(), i);
+            month.setAttribute('data-month', i);
+            month.textContent = monthDate.toLocaleDateString('en-US', { month: 'long' });
+            month.addEventListener('click', monthClick);
+            calendarBody.appendChild(month);
+        }
+    }
+
     async function fetchAndDisplayEvents() {
-        const start = month + '-01T00:00:00';
-        const end = month + '-31T23:59:59';
+        const start = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-01T00:00:00`;
+        const end = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()}T23:59:59`;
 
         try {
             const response = await fetch(`${apiBaseUrl}/events?start=${start}&end=${end}`);
@@ -56,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to handle date clicks
     async function dateClick(event) {
         const date = event.currentTarget.getAttribute('data-date');
         const title = prompt('Enter event title:');
@@ -92,6 +139,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function monthClick(event) {
+        const month = event.currentTarget.getAttribute('data-month');
+        currentDate = new Date(currentDate.getFullYear(), month, 1);
+        currentView = 'month';
+        updateHeader();
+        generateCalendarDays();
+        fetchAndDisplayEvents();
+    }
+
+    document.getElementById('view-week').addEventListener('click', () => {
+        currentView = 'week';
+        generateCalendarWeeks();
+    });
+
+    document.getElementById('view-month').addEventListener('click', () => {
+        currentView = 'month';
+        generateCalendarDays();
+        fetchAndDisplayEvents();
+    });
+
+    document.getElementById('view-year').addEventListener('click', () => {
+        currentView = 'year';
+        generateCalendarYears();
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+        if (currentView === 'month') {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendarDays();
+        } else if (currentView === 'year') {
+            currentDate.setFullYear(currentDate.getFullYear() - 1);
+            generateCalendarYears();
+        } else if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() - 7);
+            generateCalendarWeeks();
+        }
+        updateHeader();
+        fetchAndDisplayEvents();
+    });
+
+    document.getElementById('next').addEventListener('click', () => {
+        if (currentView === 'month') {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendarDays();
+        } else if (currentView === 'year') {
+            currentDate.setFullYear(currentDate.getFullYear() + 1);
+            generateCalendarYears();
+        } else if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() + 7);
+            generateCalendarWeeks();
+        }
+        updateHeader();
+        fetchAndDisplayEvents();
+    });
+
+    updateHeader();
     generateCalendarDays();
     fetchAndDisplayEvents();
 });

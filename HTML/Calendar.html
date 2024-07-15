@@ -1,14 +1,15 @@
+<!DOCTYPE html>
 <html lang="en">
-
-<link rel="Stylesheet" href="/CSS/Calendar.css">
-<link rel="stylesheet" href="/CSS/NavBar.css">
-<link rel="stylesheet" href="/CSS/SocialmediaIcons.css">
 
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar</title>
+    <link rel="Stylesheet" href="/CSS/Calendar.css">
+    <link rel="stylesheet" href="/CSS/NavBar.css">
+    <link rel="stylesheet" href="/CSS/SocialmediaIcons.css">
+
 
 </head>
 
@@ -44,22 +45,31 @@
 <h1>Calendar View</h1>
 <div class="calendar">
     <div class="calendar-header">
-        <div class="month">July 2024</div>
+        <div class="controls">
+            <button id="prev">Previous</button>
+            <div class="month">July 2024</div>
+            <button id="next">Next</button>
+        </div>
+        <div class="view-controls">
+            <button id="view-week">Week</button>
+            <button id="view-month">Month</button>
+            <button id="view-year">Year</button>
+        </div>
         <div class="weekdays">
-            <div>Sun</div>
             <div>Mon</div>
             <div>Tue</div>
             <div>Wed</div>
             <div>Thu</div>
             <div>Fri</div>
             <div>Sat</div>
+            <div>Sun</div>
         </div>
     </div>
     <div class="calendar-body">
         <!-- Calendar days will be dynamically generated here -->
     </div>
 </div>
-</div>
+
 
 </body>
 <script src="/JS/Calendar.js" defer></script>
