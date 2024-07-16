@@ -31,13 +31,13 @@
 .triangle-left {
     border-width: 5px 10px 5px 0;
     border-color: transparent #E8E8E8 transparent transparent;
-    right: 90px;
+    right: 160px;
 }
 
 .triangle-right {
     border-width: 5px 0 5px 10px;
     border-color: transparent transparent transparent #E8E8E8;
-    right: 40px;
+    right: 80px;
 }
 
 .triangle-left:hover {
@@ -245,4 +245,8 @@
 
 .selected-month {
     color: red; /* Change this as needed */
+}
+
+.year {
+    margin: 0 20px;
 }

@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Set the current year
+    let currentYear = new Date().getFullYear();
     const yearElement = document.querySelector(".year");
-    const currentYear = new Date().getFullYear();
     yearElement.textContent = currentYear;
 
     // Create buttons for create, edit, and delete functionalities
@@ -47,6 +46,22 @@ document.addEventListener("DOMContentLoaded", function() {
             // Update the calendar with the selected month
             updateCalendarWithMonth(monthElement.textContent.trim());
         });
+    });
+
+    // Add event listeners to the year arrows
+    const prevYearArrow = document.querySelector(".triangle-left");
+    const nextYearArrow = document.querySelector(".triangle-right");
+
+    prevYearArrow.addEventListener("click", function() {
+        currentYear--;
+        yearElement.textContent = currentYear;
+        updateCalendarWithMonth(getSelectedMonth());
+    });
+
+    nextYearArrow.addEventListener("click", function() {
+        currentYear++;
+        yearElement.textContent = currentYear;
+        updateCalendarWithMonth(getSelectedMonth());
     });
 
     // Add event listeners to each date
@@ -107,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Show the current date in the left container if it's the current month
         const today = new Date();
-        if (today.getMonth() === selectedMonthIndex) {
+        if (today.getFullYear() === currentYear && today.getMonth() === selectedMonthIndex) {
             const currentDate = today.getDate();
             highlightDate(currentDate);
             updateLeftContainerWithDate(currentDate);
@@ -134,9 +149,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Helper function to get the selected month index
     function getSelectedMonthIndex() {
-        const selectedMonth = document.querySelector(".selected-month").textContent.trim();
+        const selectedMonth = getSelectedMonth();
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         return months.indexOf(selectedMonth);
+    }
+
+    // Helper function to get the selected month
+    function getSelectedMonth() {
+        return document.querySelector(".selected-month").textContent.trim();
     }
 
     // Initialize the calendar with the current month
