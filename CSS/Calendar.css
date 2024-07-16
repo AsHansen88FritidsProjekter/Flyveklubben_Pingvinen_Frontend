@@ -102,16 +102,6 @@
     word-spacing: 55px;
 }
 
-.active-day {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background-color: #2ECC71;
-    position: absolute;
-    top: 430px;
-    left: 661px;
-}
-
 .white {
     color: white;
 }
