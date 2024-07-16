@@ -167,11 +167,14 @@
     background-color: #27e879;
 }
 
-.num-date {
-    font-size: 150px;
-    width: 50%;
-    margin: 0 auto;
-    font-weight: 700;
+.num-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 60px; /* Adjust gap as needed */
+}
+
+.date-empty {
+    visibility: hidden;
 }
 
 .day {
@@ -235,4 +238,21 @@
 .add:hover, .create-event:hover, .add-event:hover {
     color: #27e879 !important;
     border-color: #27e879 !important;
+}
+.month-hover:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.date-hover:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.selected-date {
+    background-color: yellow; /* Change this as needed */
+}
+
+.selected-month {
+    color: red; /* Change this as needed */
 }

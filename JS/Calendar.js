@@ -1,120 +1,146 @@
-async function fetchEvents(start, end) {
-    const response = await fetch(`http://localhost:9090/api/calendar/events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch events');
-    }
-    return await response.json();
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // Set the current year
+    const yearElement = document.querySelector(".year");
+    const currentYear = new Date().getFullYear();
+    yearElement.textContent = currentYear;
 
-// Usage example:
-fetchEvents('2023-07-01T00:00:00', '2023-07-31T23:59:59')
-    .then(events => console.log(events))
-    .catch(error => console.error(error));
+    // Create buttons for create, edit, and delete functionalities
+    const createEventButton = document.querySelector(".create-event");
+    const editEventButton = document.createElement("button");
+    const deleteEventButton = document.createElement("button");
 
-async function createEvent(start, end, text) {
-    const response = await fetch('http://localhost:9090/api/calendar/events/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            start: start,
-            end: end,
-            text: text,
-        }),
+    editEventButton.textContent = "Edit Event";
+    deleteEventButton.textContent = "Delete Event";
+
+    // Append buttons to the calendar-left div
+    const calendarLeft = document.querySelector(".calendar-left");
+    calendarLeft.appendChild(editEventButton);
+    calendarLeft.appendChild(deleteEventButton);
+
+    // Event listeners for the buttons
+    createEventButton.addEventListener("click", function() {
+        alert("Create event button clicked");
+        // Add your create event logic here
     });
 
-    if (!response.ok) {
-        throw new Error('Failed to create event');
-    }
-    return await response.json();
-}
-
-// Usage example:
-createEvent('2023-07-20T10:00:00', '2023-07-20T12:00:00', 'Meeting with team')
-    .then(event => console.log(event))
-    .catch(error => console.error(error));
-
-async function moveEvent(id, start, end) {
-    const response = await fetch('http://localhost:9090/api/calendar/events/move', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: id,
-            start: start,
-            end: end,
-        }),
+    editEventButton.addEventListener("click", function() {
+        alert("Edit event button clicked");
+        // Add your edit event logic here
     });
 
-    if (!response.ok) {
-        throw new Error('Failed to move event');
-    }
-    return await response.json();
-}
-
-// Usage example:
-moveEvent(1, '2023-07-20T14:00:00', '2023-07-20T16:00:00')
-    .then(event => console.log(event))
-    .catch(error => console.error(error));
-
-async function setColor(id, color) {
-    const response = await fetch('http://localhost:9090/api/calendar/events/setColor', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: id,
-            color: color,
-        }),
+    deleteEventButton.addEventListener("click", function() {
+        alert("Delete event button clicked");
+        // Add your delete event logic here
     });
 
-    if (!response.ok) {
-        throw new Error('Failed to set event color');
-    }
-    return await response.json();
-}
-
-// Usage example:
-setColor(1, '#FF0000')
-    .then(event => console.log(event))
-    .catch(error => console.error(error));
-
-async function deleteEvent(id) {
-    const response = await fetch('http://localhost:9090/api/calendar/events/delete', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: id,
-        }),
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to delete event');
-    }
-    return await response.json();
-}
-
-// Usage example:
-deleteEvent(1)
-    .then(response => console.log(response.message))
-    .catch(error => console.error(error));
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Fetch and display events for a specific date range
-    fetchEvents('2023-07-01T00:00:00', '2023-07-31T23:59:59')
-        .then(events => {
-            const currentEventsList = document.querySelector('.current-events ul');
-            currentEventsList.innerHTML = ''; // Clear existing events
-            events.forEach(event => {
-                const listItem = document.createElement('li');
-                listItem.textContent = event.text;
-                currentEventsList.appendChild(listItem);
+    // Add event listeners to each month
+    const monthElements = document.querySelectorAll(".month-hover");
+    monthElements.forEach(function(monthElement) {
+        monthElement.addEventListener("click", function() {
+            // Remove previous selected month class
+            document.querySelectorAll(".selected-month").forEach(function(el) {
+                el.classList.remove("selected-month");
             });
-        })
-        .catch(error => console.error(error));
+            // Add selected class to clicked month
+            monthElement.classList.add("selected-month");
+
+            // Update the calendar with the selected month
+            updateCalendarWithMonth(monthElement.textContent.trim());
+        });
+    });
+
+    // Add event listeners to each date
+    function addDateEventListeners() {
+        const dateElements = document.querySelectorAll(".date-hover");
+        dateElements.forEach(function(dateElement) {
+            dateElement.addEventListener("click", function() {
+                // Remove previous selected date class
+                document.querySelectorAll(".selected-date").forEach(function(el) {
+                    el.classList.remove("selected-date");
+                });
+                // Add selected class to clicked date
+                dateElement.classList.add("selected-date");
+
+                // Get the clicked date
+                const clickedDate = dateElement.textContent.trim();
+                if (clickedDate) {
+                    updateLeftContainerWithDate(clickedDate);
+                }
+            });
+        });
+    }
+
+    // Function to update the left container with the clicked date
+    function updateLeftContainerWithDate(date) {
+        const numDateElement = document.querySelector(".num-date");
+        const dayElement = document.querySelector(".day");
+
+        const selectedMonthIndex = getSelectedMonthIndex();
+        const dateObject = new Date(currentYear, selectedMonthIndex, date);
+        const dayName = dateObject.toLocaleDateString("da-DK", { weekday: 'long' }).toUpperCase();
+
+        numDateElement.textContent = date;
+        dayElement.textContent = dayName;
+    }
+
+    // Function to update the calendar with the selected month
+    function updateCalendarWithMonth(month) {
+        const selectedMonthIndex = getSelectedMonthIndex();
+        const firstDay = new Date(currentYear, selectedMonthIndex, 1).getDay();
+        const daysInMonth = new Date(currentYear, selectedMonthIndex + 1, 0).getDate();
+
+        const numDatesContainer = document.querySelector(".num-dates");
+        numDatesContainer.innerHTML = "";
+
+        // Fill the calendar with dates
+        let dateHTML = "";
+        for (let i = 0; i < firstDay; i++) {
+            dateHTML += '<span class="date-empty"></span>';
+        }
+        for (let day = 1; day <= daysInMonth; day++) {
+            dateHTML += `<span class="date-hover">${day}</span>`;
+        }
+        numDatesContainer.innerHTML = dateHTML;
+
+        // Add event listeners to the new date elements
+        addDateEventListeners();
+
+        // Show the current date in the left container if it's the current month
+        const today = new Date();
+        if (today.getMonth() === selectedMonthIndex) {
+            const currentDate = today.getDate();
+            highlightDate(currentDate);
+            updateLeftContainerWithDate(currentDate);
+        } else {
+            // Clear the date if the current month is not selected
+            document.querySelector(".num-date").textContent = "";
+            document.querySelector(".day").textContent = "";
+        }
+    }
+
+    // Function to highlight the current date
+    function highlightDate(date) {
+        // Remove previous selected date class
+        document.querySelectorAll(".selected-date").forEach(function(el) {
+            el.classList.remove("selected-date");
+        });
+        // Find the date element and add selected class
+        document.querySelectorAll(".date-hover").forEach(function(el) {
+            if (el.textContent.trim() === String(date)) {
+                el.classList.add("selected-date");
+            }
+        });
+    }
+
+    // Helper function to get the selected month index
+    function getSelectedMonthIndex() {
+        const selectedMonth = document.querySelector(".selected-month").textContent.trim();
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return months.indexOf(selectedMonth);
+    }
+
+    // Initialize the calendar with the current month
+    const currentMonthIndex = new Date().getMonth();
+    document.querySelectorAll(".month-hover")[currentMonthIndex].classList.add("selected-month");
+    updateCalendarWithMonth(document.querySelectorAll(".month-hover")[currentMonthIndex].textContent.trim());
 });
