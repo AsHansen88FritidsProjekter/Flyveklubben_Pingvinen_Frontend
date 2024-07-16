@@ -244,16 +244,16 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 console.log("Event created:", data);
                 markDatesWithEvents([data]);
+                fetchEventsForMonth(currentYear, selectedMonthIndex); // Refresh events
             })
             .catch(error => console.error("Error creating event:", error));
     }
 
     // Function to edit an event
-    function editEvent() {
+    function editEvent(eventId, newText) {
         const eventDetails = {
-            id: 1,                           // Example event ID
-            start: new Date().toISOString(), // Example new start date
-            end: new Date().toISOString()    // Example new end date
+            id: eventId,                      // Event ID to edit
+            text: newText                     // New text for the event
         };
 
         fetch('http://localhost:9090/api/calendar/events/move', {
@@ -266,15 +266,15 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 console.log("Event edited:", data);
-                // Update your calendar with the edited event
+                fetchEventsForMonth(currentYear, getSelectedMonthIndex()); // Refresh events
             })
             .catch(error => console.error("Error editing event:", error));
     }
 
     // Function to delete an event
-    function deleteEvent() {
+    function deleteEvent(eventId) {
         const eventDetails = {
-            id: 1 // Example event ID
+            id: eventId // Event ID to delete
         };
 
         fetch('http://localhost:9090/api/calendar/events/delete', {
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 console.log("Event deleted:", data);
-                // Update your calendar after deleting the event
+                fetchEventsForMonth(currentYear, getSelectedMonthIndex()); // Refresh events
             })
             .catch(error => console.error("Error deleting event:", error));
     }
@@ -301,6 +301,30 @@ document.addEventListener("DOMContentLoaded", function() {
             events.forEach(event => {
                 const eventElement = document.createElement("div");
                 eventElement.textContent = `${new Date(event.start).toLocaleDateString()} - ${event.text}`;
+
+                // Create edit button
+                const editButton = document.createElement("button");
+                editButton.textContent = "✎"; // Unicode for pencil icon
+                editButton.style.marginRight = "10px";
+                editButton.addEventListener("click", () => {
+                    const newText = prompt("Edit event details:", event.text);
+                    if (newText) {
+                        editEvent(event.id, newText);
+                    }
+                });
+
+                // Create delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "✕"; // Unicode for 'x' icon
+                deleteButton.addEventListener("click", () => {
+                    deleteEvent(event.id);
+                });
+
+                // Append buttons to the event element
+                eventElement.appendChild(editButton);
+                eventElement.appendChild(deleteButton);
+
+                // Append event element to the events box
                 eventsBox.appendChild(eventElement);
             });
         }
