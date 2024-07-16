@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const createEventButton = document.querySelector(".create-event");
     const editEventButton = document.createElement("button");
     const deleteEventButton = document.createElement("button");
+    const seeEventsButton = document.querySelector(".see-events");
+    const eventsBox = document.querySelector(".events-box");
 
     editEventButton.textContent = "Edit Event";
     deleteEventButton.textContent = "Delete Event";
@@ -40,6 +42,16 @@ document.addEventListener("DOMContentLoaded", function() {
         alert("Delete event button clicked");
         // Add your delete event logic here
         deleteEvent();
+    });
+
+    seeEventsButton.addEventListener("click", function() {
+        const selectedMonthIndex = getSelectedMonthIndex();
+        const start = new Date(currentYear, selectedMonthIndex, 1);
+        const end = new Date(currentYear, selectedMonthIndex + 1, 0);
+        fetchEvents(start, end)
+            .then(events => {
+                displayEvents(events);
+            });
     });
 
     // Add event listeners to each month
@@ -278,5 +290,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Update your calendar after deleting the event
             })
             .catch(error => console.error("Error deleting event:", error));
+    }
+
+    // Function to display events in the green box
+    function displayEvents(events) {
+        eventsBox.innerHTML = ""; // Clear the current content
+        if (events.length === 0) {
+            eventsBox.textContent = "No events for the selected month.";
+        } else {
+            events.forEach(event => {
+                const eventElement = document.createElement("div");
+                eventElement.textContent = `${new Date(event.start).toLocaleDateString()} - ${event.text}`;
+                eventsBox.appendChild(eventElement);
+            });
+        }
+        eventsBox.style.display = "block"; // Show the green box
     }
 });
