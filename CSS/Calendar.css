@@ -122,6 +122,15 @@
     left: 535px;
 }
 
+.event-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 2px;
+}
+
 .grey {
     color: #AAAAB1;
 }

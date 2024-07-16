@@ -18,9 +18,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Event listeners for the buttons
     createEventButton.addEventListener("click", function() {
-        alert("Create event button clicked");
-        // Add your create event logic here
-        createEvent();
+        const selectedDateElement = document.querySelector(".selected-date");
+        if (selectedDateElement) {
+            const selectedDate = selectedDateElement.textContent.trim();
+            const eventText = prompt("Enter event details:");
+            if (eventText) {
+                createEvent(selectedDate, eventText);
+            }
+        } else {
+            alert("Please select a date first.");
+        }
     });
 
     editEventButton.addEventListener("click", function() {
@@ -134,6 +141,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector(".num-date").textContent = "";
             document.querySelector(".day").textContent = "";
         }
+
+        // Fetch and display events for the selected month
+        fetchEventsForMonth(currentYear, selectedMonthIndex);
     }
 
     // Function to highlight the current date
@@ -169,21 +179,46 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to fetch events from the backend
     function fetchEvents(start, end) {
-        fetch(`http://localhost:9090/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
+        return fetch(`http://localhost:9090/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
             .then(response => response.json())
             .then(data => {
                 console.log("Events:", data);
-                // Update your calendar with the fetched events
+                return data;
             })
             .catch(error => console.error("Error fetching events:", error));
     }
 
+    // Function to fetch events for the selected month
+    function fetchEventsForMonth(year, monthIndex) {
+        const start = new Date(year, monthIndex, 1);
+        const end = new Date(year, monthIndex + 1, 0);
+        fetchEvents(start, end).then(events => {
+            markDatesWithEvents(events);
+        });
+    }
+
+    // Function to mark dates that have events
+    function markDatesWithEvents(events) {
+        events.forEach(event => {
+            const eventDate = new Date(event.start).getDate();
+            document.querySelectorAll(".date-hover").forEach(dateElement => {
+                if (parseInt(dateElement.textContent.trim()) === eventDate) {
+                    dateElement.innerHTML += '<span class="event-dot"></span>';
+                }
+            });
+        });
+    }
+
     // Function to create a new event
-    function createEvent() {
+    function createEvent(date, eventText) {
+        const selectedMonthIndex = getSelectedMonthIndex();
+        const start = new Date(currentYear, selectedMonthIndex, date);
+        const end = new Date(currentYear, selectedMonthIndex, date);
+
         const eventDetails = {
-            start: new Date().toISOString(), // Example start date
-            end: new Date().toISOString(),   // Example end date
-            text: "New Event"                // Example event text
+            start: start.toISOString(),
+            end: end.toISOString(),
+            text: eventText
         };
 
         fetch('http://localhost:9090/api/calendar/events/create', {
@@ -196,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 console.log("Event created:", data);
-                // Update your calendar with the new event
+                markDatesWithEvents([data]);
             })
             .catch(error => console.error("Error creating event:", error));
     }
@@ -245,4 +280,3 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error("Error deleting event:", error));
     }
 });
-
