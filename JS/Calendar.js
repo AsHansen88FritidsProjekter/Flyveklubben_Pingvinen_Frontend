@@ -20,16 +20,19 @@ document.addEventListener("DOMContentLoaded", function() {
     createEventButton.addEventListener("click", function() {
         alert("Create event button clicked");
         // Add your create event logic here
+        createEvent();
     });
 
     editEventButton.addEventListener("click", function() {
         alert("Edit event button clicked");
         // Add your edit event logic here
+        editEvent();
     });
 
     deleteEventButton.addEventListener("click", function() {
         alert("Delete event button clicked");
         // Add your delete event logic here
+        deleteEvent();
     });
 
     // Add event listeners to each month
@@ -163,4 +166,83 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentMonthIndex = new Date().getMonth();
     document.querySelectorAll(".month-hover")[currentMonthIndex].classList.add("selected-month");
     updateCalendarWithMonth(document.querySelectorAll(".month-hover")[currentMonthIndex].textContent.trim());
+
+    // Function to fetch events from the backend
+    function fetchEvents(start, end) {
+        fetch(`http://localhost:9090/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Events:", data);
+                // Update your calendar with the fetched events
+            })
+            .catch(error => console.error("Error fetching events:", error));
+    }
+
+    // Function to create a new event
+    function createEvent() {
+        const eventDetails = {
+            start: new Date().toISOString(), // Example start date
+            end: new Date().toISOString(),   // Example end date
+            text: "New Event"                // Example event text
+        };
+
+        fetch('http://localhost:9090/api/calendar/events/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventDetails)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Event created:", data);
+                // Update your calendar with the new event
+            })
+            .catch(error => console.error("Error creating event:", error));
+    }
+
+    // Function to edit an event
+    function editEvent() {
+        const eventDetails = {
+            id: 1,                           // Example event ID
+            start: new Date().toISOString(), // Example new start date
+            end: new Date().toISOString()    // Example new end date
+        };
+
+        fetch('http://localhost:9090/api/calendar/events/move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventDetails)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Event edited:", data);
+                // Update your calendar with the edited event
+            })
+            .catch(error => console.error("Error editing event:", error));
+    }
+
+    // Function to delete an event
+    function deleteEvent() {
+        const eventDetails = {
+            id: 1 // Example event ID
+        };
+
+        fetch('http://localhost:9090/api/calendar/events/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventDetails)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Event deleted:", data);
+                // Update your calendar after deleting the event
+            })
+            .catch(error => console.error("Error deleting event:", error));
+    }
 });
+
