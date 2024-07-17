@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to fetch events from the backend
     function fetchEvents(start, end) {
-        return fetch(`/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
+        return fetch(`http://localhost:9090/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
             .then(response => response.json())
             .then(data => {
                 console.log("Events:", data);
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
             text: eventText
         };
 
-        fetch('/api/calendar/events/create', {
+        fetch('http://localhost:9090/api/calendar/events/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function() {
             text: newText                     // New text for the event
         };
 
-        fetch('/api/calendar/events/move', {
+        fetch('http://localhost:9090/api/calendar/events/move', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id: eventId // Event ID to delete
         };
 
-        fetch('/api/calendar/events/delete', {
+        fetch('http://localhost:9090/api/calendar/events/delete', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
