@@ -44,11 +44,11 @@
     <div class="calendar-base">
         <div class="calendar-left">
             <!-- Contents of .calendar-left -->
-            <div class="hamburger">
+            <button class="hamburger" id="flip-btn">
                 <div class="burger-line"></div>
                 <div class="burger-line"></div>
                 <div class="burger-line"></div>
-            </div>
+            </button>
             <div class="num-date">27</div>
             <div class="day">THURSDAY</div>
             <div class="current-events">
@@ -65,6 +65,16 @@
             <div class="add-event"><span class="add">+</span></div>
         </div>
         <!-- .calendar-left -->
+
+        <div class="calendar-left-back">
+            <button class="hamburger" id="flip-btn-back">
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+            </button>
+            <button class="see-events">See Events</button>
+            <div class="events-box"></div>
+        </div>
 
         <!-- Remaining contents of .calendar-base -->
         <div class="year-container">
@@ -98,6 +108,7 @@
     <!-- .calendar-base -->
 </div>
 <!-- .container -->
+
 
 
 <script src="/JS/Calendar.js" defer></script>

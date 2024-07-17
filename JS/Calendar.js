@@ -5,18 +5,101 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Create buttons for create, edit, and delete functionalities
     const createEventButton = document.querySelector(".create-event");
-    const editEventButton = document.createElement("button");
-    const deleteEventButton = document.createElement("button");
     const seeEventsButton = document.querySelector(".see-events");
+    const eventsBoxContainer = document.querySelector(".events-box-container");
     const eventsBox = document.querySelector(".events-box");
+    const eventsBoxBack = document.querySelector(".events-box-back");
+    const hamburger = document.querySelector(".hamburger");
 
-    editEventButton.textContent = "Edit Event";
-    deleteEventButton.textContent = "Delete Event";
+    // Function to display events in the green box
+    function displayEvents(events) {
+        eventsBox.innerHTML = ""; // Clear the current content
+        if (events.length === 0) {
+            eventsBox.textContent = "No events for the selected month.";
+        } else {
+            events.forEach(event => {
+                const eventElement = document.createElement("div");
+                eventElement.textContent = `${new Date(event.start).toLocaleDateString()} - ${event.text}`;
 
-    // Append buttons to the calendar-left div
-    const calendarLeft = document.querySelector(".calendar-left");
-    calendarLeft.appendChild(editEventButton);
-    calendarLeft.appendChild(deleteEventButton);
+                // Create edit button
+                const editButton = document.createElement("button");
+                editButton.textContent = "✎"; // Unicode for pencil icon
+                editButton.style.marginRight = "10px";
+                editButton.addEventListener("click", () => {
+                    const newText = prompt("Edit event details:", event.text);
+                    if (newText) {
+                        editEvent(event.id, newText);
+                    }
+                });
+
+                // Create delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "✕"; // Unicode for 'x' icon
+                deleteButton.addEventListener("click", () => {
+                    deleteEvent(event.id);
+                });
+
+                // Append buttons to the event element
+                eventElement.appendChild(editButton);
+                eventElement.appendChild(deleteButton);
+
+                // Append event element to the events box
+                eventsBox.appendChild(eventElement);
+            });
+        }
+        eventsBox.style.display = "block"; // Show the green box
+    }
+
+    // Function to display events in the back side of the box
+    function displayEventsBack(events) {
+        eventsBoxBack.innerHTML = ""; // Clear the current content
+        if (events.length === 0) {
+            eventsBoxBack.textContent = "No events for the selected month.";
+        } else {
+            events.forEach(event => {
+                const eventElement = document.createElement("div");
+                eventElement.textContent = `${new Date(event.start).toLocaleDateString()} - ${event.text}`;
+
+                // Create edit button
+                const editButton = document.createElement("button");
+                editButton.textContent = "✎"; // Unicode for pencil icon
+                editButton.style.marginRight = "10px";
+                editButton.addEventListener("click", () => {
+                    const newText = prompt("Edit event details:", event.text);
+                    if (newText) {
+                        editEvent(event.id, newText);
+                    }
+                });
+
+                // Create delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "✕"; // Unicode for 'x' icon
+                deleteButton.addEventListener("click", () => {
+                    deleteEvent(event.id);
+                });
+
+                // Append buttons to the event element
+                eventElement.appendChild(editButton);
+                eventElement.appendChild(deleteButton);
+
+                // Append event element to the events box back
+                eventsBoxBack.appendChild(eventElement);
+            });
+        }
+    }
+
+    // Event listener for the hamburger menu
+    hamburger.addEventListener("click", function() {
+        eventsBoxContainer.classList.toggle("flipped");
+
+        const selectedMonthIndex = getSelectedMonthIndex();
+        const start = new Date(currentYear, selectedMonthIndex, 1);
+        const end = new Date(currentYear, selectedMonthIndex + 1, 0);
+        fetchEvents(start, end)
+            .then(events => {
+                displayEventsBack(events);
+            });
+    });
 
     // Event listeners for the buttons
     createEventButton.addEventListener("click", function() {
@@ -30,18 +113,6 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             alert("Please select a date first.");
         }
-    });
-
-    editEventButton.addEventListener("click", function() {
-        alert("Edit event button clicked");
-        // Add your edit event logic here
-        editEvent();
-    });
-
-    deleteEventButton.addEventListener("click", function() {
-        alert("Delete event button clicked");
-        // Add your delete event logic here
-        deleteEvent();
     });
 
     seeEventsButton.addEventListener("click", function() {
@@ -191,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to fetch events from the backend
     function fetchEvents(start, end) {
-        return fetch(`http://localhost:9090/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
+        return fetch(`/api/calendar/events?start=${start.toISOString()}&end=${end.toISOString()}`)
             .then(response => response.json())
             .then(data => {
                 console.log("Events:", data);
@@ -233,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
             text: eventText
         };
 
-        fetch('http://localhost:9090/api/calendar/events/create', {
+        fetch('/api/calendar/events/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -256,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function() {
             text: newText                     // New text for the event
         };
 
-        fetch('http://localhost:9090/api/calendar/events/move', {
+        fetch('/api/calendar/events/move', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -277,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id: eventId // Event ID to delete
         };
 
-        fetch('http://localhost:9090/api/calendar/events/delete', {
+        fetch('/api/calendar/events/delete', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -291,43 +362,12 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error deleting event:", error));
     }
+});
 
-    // Function to display events in the green box
-    function displayEvents(events) {
-        eventsBox.innerHTML = ""; // Clear the current content
-        if (events.length === 0) {
-            eventsBox.textContent = "No events for the selected month.";
-        } else {
-            events.forEach(event => {
-                const eventElement = document.createElement("div");
-                eventElement.textContent = `${new Date(event.start).toLocaleDateString()} - ${event.text}`;
+document.getElementById('flip-btn').addEventListener('click', function() {
+    document.querySelector('.container').classList.toggle('flip');
+});
 
-                // Create edit button
-                const editButton = document.createElement("button");
-                editButton.textContent = "✎"; // Unicode for pencil icon
-                editButton.style.marginRight = "10px";
-                editButton.addEventListener("click", () => {
-                    const newText = prompt("Edit event details:", event.text);
-                    if (newText) {
-                        editEvent(event.id, newText);
-                    }
-                });
-
-                // Create delete button
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "✕"; // Unicode for 'x' icon
-                deleteButton.addEventListener("click", () => {
-                    deleteEvent(event.id);
-                });
-
-                // Append buttons to the event element
-                eventElement.appendChild(editButton);
-                eventElement.appendChild(deleteButton);
-
-                // Append event element to the events box
-                eventsBox.appendChild(eventElement);
-            });
-        }
-        eventsBox.style.display = "block"; // Show the green box
-    }
+document.getElementById('flip-btn-back').addEventListener('click', function() {
+    document.querySelector('.container').classList.toggle('flip');
 });
