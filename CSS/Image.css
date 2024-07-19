@@ -1,3 +1,4 @@
+/* Global styles */
 * {
     box-sizing: border-box;
 }
@@ -8,12 +9,17 @@ body {
     padding: 0;
 }
 
+/* Centering the image container in the viewport */
 .imageContainer {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     max-width: 1000px;
-    margin: auto;
+    width: 100%;
 }
 
+/* Styling for the main image and its container */
 .mainImageContainer {
     position: relative;
     text-align: center;
@@ -57,6 +63,7 @@ body {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+/* Gallery styling */
 .gallery {
     display: flex;
     flex-wrap: wrap;
@@ -77,6 +84,7 @@ body {
     transform: scale(1.05);
 }
 
+/* Dropdown styles */
 .dropdown-button {
     cursor: pointer;
     position: absolute;
@@ -129,6 +137,7 @@ body {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Lightbox styling */
 .lightbox {
     display: none;
     position: fixed;
