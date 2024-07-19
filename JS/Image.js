@@ -166,6 +166,7 @@ function changeSlide(n) {
     setMainImage(images[currentIndex]);
 }
 
+
 // Function to open the lightbox
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
