@@ -12,22 +12,18 @@ body {
     position: relative;
     max-width: 1000px;
     margin: auto;
-    padding: 20px;
-    text-align: center;
 }
 
 .mainImageContainer {
     position: relative;
-    display: inline-block;
-    margin: auto;
     text-align: center;
+    max-width: 100%;
+    margin: auto;
 }
 
-#mainImage {
+.mainImageContainer img {
     max-width: 100%;
     height: auto;
-    display: block;
-    margin: 0 auto;
 }
 
 .prev,
@@ -42,8 +38,7 @@ body {
     font-size: 20px;
     border-radius: 3px;
     user-select: none;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
     transform: translateY(-50%);
 }
 
@@ -66,19 +61,72 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: center;
     padding: 10px;
-    margin: 0 auto;
+    justify-content: center;
 }
 
 .gallery img {
     width: 100px;
     cursor: pointer;
     transition: transform 0.2s;
+    margin: 10px;
+    position: relative;
 }
 
 .gallery img:hover {
     transform: scale(1.05);
+}
+
+.dropdown-button {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    user-select: none;
+}
+
+.dropdown-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.dropdown {
+    position: absolute;
+    top: 40px; /* Adjust this to position dropdown below the button */
+    right: 0; /* Align to the right of the image container */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 1px solid #444;
+    border-radius: 5px;
+    display: none;
+    padding: 5px;
+    z-index: 10;
+    min-width: 120px; /* Ensure the dropdown menu has a minimum width */
+}
+
+.dropdown button {
+    background: none;
+    border: none;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    display: block;
+    width: 100%;
+}
+
+.dropdown button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .lightbox {
@@ -91,7 +139,6 @@ body {
     background: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
 .lightbox img {

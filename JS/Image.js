@@ -19,7 +19,7 @@ async function uploadImage(file) {
             throw new Error('Image upload failed');
         }
 
-        const result = await response.text(); // Assuming response is plain text
+        const result = await response.text();
         document.getElementById('uploadResult').textContent = `Image uploaded successfully: ${result}`;
         fetchUploadedImages(); // Refresh the list of uploaded images
     } catch (error) {
@@ -59,73 +59,6 @@ async function downloadImage(fileName) {
     }
 }
 
-// Function to fetch uploaded images and update gallery
-async function fetchUploadedImages() {
-    try {
-        const response = await fetch('http://localhost:9090/api/image/images', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch uploaded images');
-        }
-
-        images = await response.json(); // Store image file names
-        updateGallery();
-        if (images.length > 0) {
-            setMainImage(images[0]); // Set the first image as the main image
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('uploadedImagesContainer').innerHTML = `Error: ${error.message}`;
-    }
-}
-
-// Function to set the main image
-function setMainImage(image) {
-    document.getElementById('mainImage').src = `http://localhost:9090/api/image/${encodeURIComponent(image)}`;
-}
-
-// Function to update the gallery
-function updateGallery() {
-    const container = document.getElementById('uploadedImagesContainer');
-    container.innerHTML = '';
-
-    images.forEach((file, index) => {
-        const imgContainer = document.createElement('div');
-        imgContainer.style.position = 'relative';
-        imgContainer.style.display = 'inline-block';
-
-        const imgElement = document.createElement('img');
-        imgElement.src = `http://localhost:9090/api/image/${encodeURIComponent(file)}`;
-        imgElement.alt = file;
-        imgElement.classList.add('gallery-image');
-        imgElement.dataset.index = index;
-        imgElement.addEventListener('click', () => {
-            setMainImage(file);
-            openLightbox(imgElement.src);
-        });
-        imgContainer.appendChild(imgElement);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.innerHTML = '&times;';
-        deleteBtn.classList.add('delete-btn');
-        deleteBtn.addEventListener('click', () => deleteImage(file));
-        imgContainer.appendChild(deleteBtn);
-
-        const downloadBtn = document.createElement('button');
-        downloadBtn.innerHTML = '⬇'; // Unicode character for down arrow
-        downloadBtn.classList.add('download-btn');
-        downloadBtn.addEventListener('click', () => downloadImage(file));
-        imgContainer.appendChild(downloadBtn);
-
-        container.appendChild(imgContainer);
-    });
-}
-
 // Function to delete an image
 async function deleteImage(fileName) {
     try {
@@ -149,6 +82,89 @@ async function deleteImage(fileName) {
     }
 }
 
+// Function to fetch uploaded images and update gallery
+async function fetchUploadedImages() {
+    try {
+        const response = await fetch('http://localhost:9090/api/image/images', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch uploaded images');
+        }
+
+        images = await response.json();
+        updateGallery();
+        if (images.length > 0) {
+            setMainImage(images[0]); // Set the first image as the main image
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('uploadedImagesContainer').innerHTML = `Error: ${error.message}`;
+    }
+}
+
+// Function to set the main image
+function setMainImage(image) {
+    document.getElementById('mainImage').src = `http://localhost:9090/api/image/${encodeURIComponent(image)}`;
+    currentIndex = images.indexOf(image);
+}
+
+// Function to update the gallery
+function updateGallery() {
+    const container = document.getElementById('uploadedImagesContainer');
+    container.innerHTML = '';
+
+    images.forEach((file, index) => {
+        const imgContainer = document.createElement('div');
+        imgContainer.style.position = 'relative';
+        imgContainer.style.display = 'inline-block';
+
+        const imgElement = document.createElement('img');
+        imgElement.src = `http://localhost:9090/api/image/${encodeURIComponent(file)}`;
+        imgElement.alt = file;
+        imgElement.classList.add('gallery-image');
+        imgElement.dataset.index = index;
+        imgElement.addEventListener('click', () => {
+            setMainImage(file);
+            openLightbox(imgElement.src);
+        });
+        imgContainer.appendChild(imgElement);
+
+        const dropdownButton = document.createElement('button');
+        dropdownButton.classList.add('dropdown-button');
+        dropdownButton.textContent = '⋮';
+        imgContainer.appendChild(dropdownButton);
+
+        const dropdown = document.createElement('div');
+        dropdown.classList.add('dropdown');
+        dropdown.innerHTML = `
+            <button onclick="downloadImage('${file}')">Download</button>
+            <button onclick="deleteImage('${file}')">Delete</button>
+        `;
+        imgContainer.appendChild(dropdown);
+
+        dropdownButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d !== dropdown) d.style.display = 'none';
+            });
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        container.appendChild(imgContainer);
+    });
+}
+
+// Function to handle the next and previous image navigation
+function changeSlide(n) {
+    currentIndex = (currentIndex + n + images.length) % images.length; // Ensure index is within bounds
+    setMainImage(images[currentIndex]);
+}
+
 // Function to open the lightbox
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
@@ -163,13 +179,14 @@ function closeLightbox() {
     lightbox.style.display = 'none';
 }
 
-// Function to navigate through images
-function plusSlides(n) {
-    currentIndex = (currentIndex + n + images.length) % images.length;
-    setMainImage(images[currentIndex]);
-}
+// Close dropdown menu when clicking outside
+document.addEventListener('click', (event) => {
+    if (!event.target.matches('.dropdown-button')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.style.display = 'none');
+    }
+});
 
-// Event listeners
+// Add event listeners for buttons
 document.getElementById('uploadButton').addEventListener('click', () => {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -182,5 +199,7 @@ document.getElementById('uploadButton').addEventListener('click', () => {
 
 document.getElementById('closeLightbox').addEventListener('click', closeLightbox);
 
+// Initialize on page load
 window.onload = fetchUploadedImages;
+
 
