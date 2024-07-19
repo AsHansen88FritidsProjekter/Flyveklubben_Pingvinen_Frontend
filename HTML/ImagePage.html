@@ -42,14 +42,24 @@
 <button id="uploadButton">Upload Image</button>
 <div id="uploadResult"></div>
 
-<div id="imageContainer"></div>
-<div id="uploadedImagesContainer" class="gallery"></div>
+<div class="imageContainer">
+    <!-- Main large image viewer with navigation arrows -->
+    <div class="mainImageContainer">
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <img id="mainImage" class="lightbox-image" src="" alt="Main Image">
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
 
-<div class="lightbox" id="lightbox">
-    <span class="close">&times;</span>
-    <img class="lightbox-image" id="lightboxImage">
+    <!-- Thumbnail gallery -->
+    <div id="uploadedImagesContainer" class="gallery"></div>
 
+    <!-- Lightbox for large image view -->
+    <div class="lightbox" id="lightbox">
+        <span class="close" id="closeLightbox">&times;</span>
+        <img class="lightbox-image" id="lightboxImage" alt="Lightbox Image">
+    </div>
 </div>
+
 
 <script src="/JS/Image.js"></script>
 </body>

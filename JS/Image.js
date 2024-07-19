@@ -1,3 +1,7 @@
+let currentIndex = 0;
+let images = [];
+
+// Function to handle image upload
 async function uploadImage(file) {
     const formData = new FormData();
     formData.append("image", file);
@@ -24,6 +28,7 @@ async function uploadImage(file) {
     }
 }
 
+// Function to handle image download
 async function downloadImage(fileName) {
     try {
         const encodedFileName = encodeURIComponent(fileName);
@@ -54,6 +59,7 @@ async function downloadImage(fileName) {
     }
 }
 
+// Function to fetch uploaded images and update gallery
 async function fetchUploadedImages() {
     try {
         const response = await fetch('http://localhost:9090/api/image/images', {
@@ -67,46 +73,60 @@ async function fetchUploadedImages() {
             throw new Error('Failed to fetch uploaded images');
         }
 
-        const imageFiles = await response.json();
-        const container = document.getElementById('uploadedImagesContainer');
-        container.innerHTML = '';
-
-        imageFiles.forEach(file => {
-            const imgContainer = document.createElement('div');
-            imgContainer.style.position = 'relative';
-            imgContainer.style.display = 'inline-block';
-
-            const imgElement = document.createElement('img');
-            imgElement.src = `http://localhost:9090/api/image/${encodeURIComponent(file)}`;
-            imgElement.alt = file;
-            imgElement.classList.add('gallery-image');
-            imgContainer.appendChild(imgElement);
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.innerHTML = '&times;';
-            deleteBtn.classList.add('delete-btn');
-            deleteBtn.addEventListener('click', () => deleteImage(file));
-            imgContainer.appendChild(deleteBtn);
-
-            const downloadBtn = document.createElement('button');
-            downloadBtn.innerHTML = '⬇'; // Unicode character for down arrow
-            downloadBtn.classList.add('download-btn');
-            downloadBtn.addEventListener('click', () => downloadImage(file));
-            imgContainer.appendChild(downloadBtn);
-
-            container.appendChild(imgContainer);
-
-            // Add click event to open lightbox
-            imgElement.addEventListener('click', () => {
-                openLightbox(imgElement.src);
-            });
-        });
+        images = await response.json(); // Store image file names
+        updateGallery();
+        if (images.length > 0) {
+            setMainImage(images[0]); // Set the first image as the main image
+        }
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('uploadedImagesContainer').innerHTML = `Error: ${error.message}`;
     }
 }
 
+// Function to set the main image
+function setMainImage(image) {
+    document.getElementById('mainImage').src = `http://localhost:9090/api/image/${encodeURIComponent(image)}`;
+}
+
+// Function to update the gallery
+function updateGallery() {
+    const container = document.getElementById('uploadedImagesContainer');
+    container.innerHTML = '';
+
+    images.forEach((file, index) => {
+        const imgContainer = document.createElement('div');
+        imgContainer.style.position = 'relative';
+        imgContainer.style.display = 'inline-block';
+
+        const imgElement = document.createElement('img');
+        imgElement.src = `http://localhost:9090/api/image/${encodeURIComponent(file)}`;
+        imgElement.alt = file;
+        imgElement.classList.add('gallery-image');
+        imgElement.dataset.index = index;
+        imgElement.addEventListener('click', () => {
+            setMainImage(file);
+            openLightbox(imgElement.src);
+        });
+        imgContainer.appendChild(imgElement);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '&times;';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.addEventListener('click', () => deleteImage(file));
+        imgContainer.appendChild(deleteBtn);
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.innerHTML = '⬇'; // Unicode character for down arrow
+        downloadBtn.classList.add('download-btn');
+        downloadBtn.addEventListener('click', () => downloadImage(file));
+        imgContainer.appendChild(downloadBtn);
+
+        container.appendChild(imgContainer);
+    });
+}
+
+// Function to delete an image
 async function deleteImage(fileName) {
     try {
         const encodedFileName = encodeURIComponent(fileName);
@@ -129,6 +149,7 @@ async function deleteImage(fileName) {
     }
 }
 
+// Function to open the lightbox
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightboxImage');
@@ -136,11 +157,19 @@ function openLightbox(imageSrc) {
     lightboxImage.src = imageSrc;
 }
 
+// Function to close the lightbox
 function closeLightbox() {
     const lightbox = document.getElementById('lightbox');
     lightbox.style.display = 'none';
 }
 
+// Function to navigate through images
+function plusSlides(n) {
+    currentIndex = (currentIndex + n + images.length) % images.length;
+    setMainImage(images[currentIndex]);
+}
+
+// Event listeners
 document.getElementById('uploadButton').addEventListener('click', () => {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -151,6 +180,7 @@ document.getElementById('uploadButton').addEventListener('click', () => {
     }
 });
 
-document.querySelector('.close').addEventListener('click', closeLightbox);
+document.getElementById('closeLightbox').addEventListener('click', closeLightbox);
 
 window.onload = fetchUploadedImages;
+

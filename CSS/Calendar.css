@@ -92,13 +92,6 @@
     word-spacing: 10px;
 }
 
-.month-line {
-    border-color: #E8E8E8;
-    position: absolute;
-    top: 135px;
-    left: 178px;
-    width: 57%;
-}
 
 .days {
     color: #AAAAAA;
