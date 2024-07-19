@@ -7,6 +7,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: lightblue;
 }
 
 /* Styling for the main image and its container */
@@ -27,12 +28,22 @@ body {
     object-fit: contain; /* Ensure the image is contained within its container */
 }
 
-
-.mainImageContainer img {
-    max-width: 100%;
-    height: auto;
+/* Ensure proper scaling and fitting of the image */
+@media (max-width: 768px) {
+    .mainImageContainer {
+        max-width: 90%; /* Adjust for smaller screens */
+        max-height: 70vh; /* Adjust for smaller screens */
+    }
 }
 
+@media (max-width: 480px) {
+    .mainImageContainer {
+        max-width: 95%; /* Adjust for very small screens */
+        max-height: 60vh; /* Adjust for very small screens */
+    }
+}
+
+/* Navigation arrows */
 .prev,
 .next {
     cursor: pointer;
@@ -164,3 +175,4 @@ body {
     color: white;
     cursor: pointer;
 }
+

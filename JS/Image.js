@@ -159,6 +159,7 @@ function updateGallery() {
     });
 }
 
+
 // Function to handle the next and previous image navigation
 function changeSlide(n) {
     currentIndex = (currentIndex + n + images.length) % images.length; // Ensure index is within bounds
@@ -195,6 +196,16 @@ document.getElementById('uploadButton').addEventListener('click', () => {
     } else {
         alert('Please select a file to upload.');
     }
+});
+
+window.addEventListener('resize', () => {
+    // Example: Adjust dimensions based on window size
+    const container = document.querySelector('.mainImageContainer');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    container.style.maxWidth = `${width * 0.9}px`; // Adjust based on window width
+    container.style.maxHeight = `${height * 0.7}px`; // Adjust based on window height
 });
 
 document.getElementById('closeLightbox').addEventListener('click', closeLightbox);
