@@ -1,25 +1,84 @@
-body{
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: lightblue;
 }
 
-.news-item {
+.form-container {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Optional: set a max-width to prevent too wide forms */
 }
 
 .input-field {
-    width: 80%;
+    display: block;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 8px;
+    width: 50%;
+    box-sizing: border-box;
+}
 
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 20%;
+    box-sizing: border-box;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.news-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Optional: set a max-width to match form width */
+}
+
+.news-date {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 12px;
+    color: #888;
+}
+
+.news-title {
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+}
+
+.news-content {
+    margin: 10px 0 0;
+    text-align: center;
 }
 
 .delete-button {
-     cursor: pointer;
-     color: red;
-     margin-left: 10px;
- }
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+}

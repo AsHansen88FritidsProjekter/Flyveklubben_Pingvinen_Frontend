@@ -13,14 +13,31 @@ function fetchAllNews() {
                 newsItemDiv.className = 'news-item';
                 const newsDate = new Date(news.createdAt).toLocaleString(); // Format the date
                 newsItemDiv.innerHTML = `
-                            <span>${news.title}: ${news.content} (Date: ${newsDate})</span>
-                            <span class="delete-button" onclick="deleteNewsById(${news.id})">x</span>
-                        `;
+                    <span class="delete-button" onclick="deleteNewsById(${news.id})">x</span>
+                    <h3 class="news-title">${news.title}</h3>
+                    <div class="news-date">${newsDate}</div>
+                    <p class="news-content">${news.content}</p>
+                `;
                 newsDiv.appendChild(newsItemDiv);
             });
         })
         .catch(error => console.error('Error fetching news:', error));
 }
+
+function deleteNewsById(id) {
+    fetch(`http://localhost:9090/api/news/${id}`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                fetchAllNews(); // Refresh the news list after deletion
+            } else {
+                console.error('Error deleting news:', response.statusText);
+            }
+        })
+        .catch(error => console.error('Error deleting news:', error));
+}
+
+// Initial fetch to load news on page load
+document.addEventListener('DOMContentLoaded', fetchAllNews);
 
 function createNews() {
     const title = document.getElementById('news-title').value;
