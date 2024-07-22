@@ -1,15 +1,20 @@
+/* Make sure the ul takes up the full width and centers its children */
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #333;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center the items */
 }
 
+/* Ensure each list item takes only as much space as needed */
 li {
-    float: left;
+    float: none; /* Remove float since we're using flexbox */
 }
 
+/* Style links and dropdown buttons */
 li a, .dropbtn {
     display: inline-block;
     color: white;
@@ -18,14 +23,17 @@ li a, .dropbtn {
     text-decoration: none;
 }
 
+/* Change background color on hover */
 li a:hover, .dropdown2:hover .dropbtn {
     background-color: red;
 }
 
+/* Dropdown container settings */
 li.dropdown2 {
     display: inline-block;
 }
 
+/* Dropdown content settings */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -34,6 +42,7 @@ li.dropdown2 {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
+/* Style dropdown links */
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -42,8 +51,12 @@ li.dropdown2 {
     text-align: left;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+/* Change background color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
 
+/* Show dropdown on hover */
 .dropdown2:hover .dropdown-content {
     display: block;
 }
