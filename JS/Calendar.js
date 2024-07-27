@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dateHTML += '<span class="date-empty"></span>';
         }
         for (let day = 1; day <= daysInMonth; day++) {
-            dateHTML += `<span class="date-hover">${day}</span>`;
+            dateHTML += `<span class="date-hover">${day}<span class="event-dot-container"></span></span>`;
         }
         numDatesContainer.innerHTML = dateHTML;
 
@@ -277,6 +277,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const end = new Date(year, monthIndex + 1, 0);
         fetchEvents(start, end).then(events => {
             markDatesWithEvents(events);
+            displayEvents(events);
         });
     }
 
@@ -286,7 +287,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const eventDate = new Date(event.start).getDate();
             document.querySelectorAll(".date-hover").forEach(dateElement => {
                 if (parseInt(dateElement.textContent.trim()) === eventDate) {
-                    dateElement.innerHTML += '<span class="event-dot"></span>';
+                    const eventDotContainer = dateElement.querySelector(".event-dot-container");
+                    if (eventDotContainer) {
+                        eventDotContainer.innerHTML = '<span class="event-dot"></span>';
+                    }
                 }
             });
         });
