@@ -44,16 +44,22 @@ function fetchUserInfo() {
 }
 
 document.getElementById('signupButton').addEventListener('click', function() {
-    const username = document.getElementById('newUsername').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('newPassword').value;
+    const username = document.getElementById('newUsername').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('newPassword').value.trim();
     const role = document.getElementById('role').value;
+
+    // Basic validation
+    if (!username || !email || !password || !role) {
+        alert('All fields must be filled.');
+        return;
+    }
 
     const signUpRequest = {
         username: username,
         email: email,
         password: password,
-        role: [role] // Assuming a single role selection
+        role: [role] // Ensure this is an array even if it's a single role
     };
 
     fetch('http://localhost:9090/api/auth/signup', {
@@ -66,7 +72,10 @@ document.getElementById('signupButton').addEventListener('click', function() {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                // Parse and return the error message from response
+                return response.json().then(err => {
+                    throw new Error(`Network response was not ok: ${err.message || response.statusText}`);
+                });
             }
             return response.json();
         })
@@ -76,9 +85,10 @@ document.getElementById('signupButton').addEventListener('click', function() {
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('An error occurred during signup.');
+            alert(`An error occurred during signup: ${error.message}`);
         });
 });
+
 
 function displayUserInfo(user) {
     // Ensure user object has the expected properties
