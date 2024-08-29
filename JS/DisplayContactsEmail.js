@@ -7,7 +7,7 @@ function fetchContacts() {
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            displayContacts(data);
+            displayContactsEmail(data);
         })
         .catch(error => {
             console.error('Error fetching contacts:', error);
@@ -15,7 +15,7 @@ function fetchContacts() {
         });
 }
 
-function displayContacts(contacts) {
+function displayContactsEmail(contacts) {
     const container = document.getElementById('contacts');
     container.innerHTML = ''; // Clear previous entries
 
