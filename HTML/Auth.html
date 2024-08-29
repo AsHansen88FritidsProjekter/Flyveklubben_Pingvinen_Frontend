@@ -50,8 +50,13 @@
     <input type="text" id="newUsername" placeholder="Username">
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="newPassword" placeholder="Password">
-    <input type="text" id="role" placeholder="Role (comma separated)">
-    <button onclick="signup()">Signup</button>
+    <label for="role">Role:</label>
+    <select id="role">
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="moderator">Moderator</option>
+    </select>
+    <button id="signupButton">Signup</button>
 </div>
 
 <script src="/JS/Auth.js"></script>
